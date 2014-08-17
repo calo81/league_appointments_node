@@ -1,4 +1,4 @@
-App = Ember.Application.create();
+var App = Ember.Application.create();
 
 App.FileUploadComponent = Ember.FileField.extend({
   url: '',
