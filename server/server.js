@@ -5,7 +5,9 @@ var mime = require('mime');
 var formidable = require('formidable');
 var util = require('util');
 var cache = {};
-var leagues = []
+var XLS = require('xlsjs');
+
+var leagues = {}
 
 function sendFile(response, filePath, fileContents) {
     response.writeHead(
@@ -47,9 +49,21 @@ function saveLeagueFile(req, res) {
 
     form.parse(req, function (err, fields, files) {
         res.writeHead(200, {'content-type': 'text/plain'});
-        fs.readFile(files.file.path, function (err, data) {
-            res.end(data);
-        });
+        var wb = XLS.readFile(files.file.path);
+        var ws = wb.Sheets[wb.SheetNames[0]];
+        var csv = XLS.utils.sheet_to_csv(ws).split(",,");
+        for(var i=0; i<csv.length; i += 2){
+          leagues[csv[i]] = []
+          var players = csv[i+1].split("\n")
+          for(var j = 0; j<players.length; j++){
+            var values = players[j].split(",")
+              if(values[0] == ""){
+                  continue
+              }
+            leagues[csv[i]].push({"name":values[0], "email":values[1],"phone":values[2]})
+          }
+        }
+        res.end("");
     });
 
     return;
