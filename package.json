@@ -1,0 +1,17 @@
+{
+  "name": "league_appointments",
+  "version": "0.0.1",
+  "description": "League appointments and more",
+  "keywords": [],
+  "author": "Carlo Scarioni <carlo.scarioni@gmail.com>",
+  "repository": { "type": "git", "url": "git://github.com/cscarioni/league_appointments.git" },
+  "dependencies": {
+      "formidable": ">=1.0.15",
+      "mime": ">=1.2.11"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "main": "index"
+}

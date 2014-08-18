@@ -1,36 +1,29 @@
-starter-kit
-===========
 
-A starter kit for Ember
+# league_appointments
 
-Your Ember.js project is almost ready! Here's how to get started:
+  League appointments and more
 
-- Start writing your app in `js/app.js`.
+## License 
 
-- Describe your application HTML in `index.html`.
+(The MIT License)
 
-- During development, you can link to `js/libs/ember-*.js` to get the
-  unminified version of Ember.js.
+Copyright (c) 2014 Carlo Scarioni &lt;carlo.scarioni@gmail.com&gt;
 
-- Add CSS to `css/style.css`.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-- Open `index.html` in your browser.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-Tests
-=====
-
-This starter kit comes with an integration test sample, written for QUnit runner. 
-
-You can run the tests by opening the `index.html?test` page in your browser.
-
-The test is located in the `tests/tests.js` file. You can see how such an 
-integration test should be written, using QUnit assertions and ember-testing helpers.
-
-For more information about ember-testing package see [ember-testing](http://emberjs.com/guides/testing/integration/).
-
-For more information about the QUnit testing framework, see [QUnit](http://qunitjs.com/).
-
-Contact
-====
-
-[www.emberjs.com](http://www.emberjs.com)
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
