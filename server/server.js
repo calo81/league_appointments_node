@@ -47,8 +47,9 @@ function saveLeagueFile(req, res) {
 
     form.parse(req, function (err, fields, files) {
         res.writeHead(200, {'content-type': 'text/plain'});
-        res.write('Received upload:\n\n');
-        res.end(util.inspect(files));
+        fs.readFile(files.file.path, function (err, data) {
+            res.end(data);
+        });
     });
 
     return;
