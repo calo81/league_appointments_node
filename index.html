@@ -17,36 +17,43 @@
 	    <span class="sr-only">Toggle Dropdown</span>
 	  </button>
 	  <ul class="dropdown-menu" role="menu">
-	    <li>{{#linkTo "leagues"}}
+	    <li>{{#link-to "leagues"}}
               Leagues
-            {{/linkTo}}</li>
+            {{/link-to}}</li>
 	    <li><a href="#">Results</a></li>
 	  </ul>
 	</div>
     {{outlet}}
   </script>
 
-  <script type="text/x-handlebars" id="leagues">
+  <script type="text/x-handlebars" id="league">
 	<div>
-		<table class="table table-striped">
-		  <thead>
-			  <tr>
-				  <th>Name</th>
-				  <th>Email</th>
-				  <th>Phone</th>
-			  </tr>
-		  </thead>
-		  <tbody>
-	        {{#each item in model}}
-	          <tr>
-				  <td>{{item.name}}</td>
-				  <td>{{item.email}}</td>
-				  <td>{{item.phone}}</td>
-			  </tr>
-	        {{/each}}
-		  </tbody>
-		</table>
+	   AAAAAAAAAAAAAAAAAJSHDKJASH
     </div>
+  </script>
+
+  <script type="text/x-handlebars" id="leagues">
+      <div>
+          <table class="table table-striped">
+              <thead>
+              <tr>
+                  <th>Name</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each item in model}}
+              <tr>
+                  <td>{{item.name}}</td>
+                  <td>
+                    {{#link-to 'leagues.league' item}}
+                      view
+                    {{/link-to}}
+                  </td>
+              </tr>
+              {{/each}}
+              </tbody>
+          </table>
+      </div>
   </script>
 
   <script type="text/x-handlebars" id="index">

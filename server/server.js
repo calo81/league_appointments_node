@@ -8,6 +8,7 @@ var cache = {};
 var XLS = require('xlsjs');
 
 var leagues = {}
+var leaguesArray = []
 
 function sendFile(response, filePath, fileContents) {
     response.writeHead(
@@ -53,11 +54,12 @@ function saveLeagueFile(req, res) {
         var ws = wb.Sheets[wb.SheetNames[0]];
         var csv = XLS.utils.sheet_to_csv(ws).split(",,");
         for (var i = 0; i < csv.length; i += 2) {
-            if (csv[i] == "") {
+            var division = csv[i].replace(/\\n/g, '').trim();
+            if (division == "") {
                 continue
             }
-            var division = csv[i].replace(/\\n/g, '').trim();
             leagues[division] = []
+            leaguesArray.push({"id": i, "name": division})
             var playersString = csv[i + 1]
             if (!(!!playersString)) {
                 continue
@@ -79,7 +81,7 @@ function saveLeagueFile(req, res) {
 }
 
 function serveLeagues(req, res){
-    res.end(JSON.stringify({"league": leagues["Premier Division"]}));
+    res.end(JSON.stringify({"leagues": leaguesArray}));
 }
 
 
