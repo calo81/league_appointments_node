@@ -77,6 +77,10 @@ function saveLeagueFile(req, res) {
     return;
 }
 
+function serveLeagues(req, res){
+    res.end(JSON.stringify({"league": leagues["Premier Division"]}));
+}
+
 
 http.createServer(function (req, res) {
     var filePath = null
@@ -85,7 +89,9 @@ http.createServer(function (req, res) {
         serveStatic(res, cache, './' + filePath);
     } else if (req.url == '/upload') {
         saveLeagueFile(req, res)
-    } else {
+    } else if (req.url == '/leagues') {
+        serveLeagues(req, res)
+    }  else {
         filePath = req.url;
         serveStatic(res, cache, './' + filePath);
     }
