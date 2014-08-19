@@ -68,7 +68,8 @@ function saveLeagueFile(req, res) {
                 if (values[0] == "") {
                     continue
                 }
-                leagues[division].push({"name": values[0], "email": values[1], "phone": values[2]})
+                var id = i + "" + j
+                leagues[division].push({"id": id, "name": values[0], "email": values[1], "phone": values[2]})
             }
         }
         res.end(JSON.stringify(leagues));
