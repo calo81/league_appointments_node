@@ -52,18 +52,26 @@ function saveLeagueFile(req, res) {
         var wb = XLS.readFile(files.file.path);
         var ws = wb.Sheets[wb.SheetNames[0]];
         var csv = XLS.utils.sheet_to_csv(ws).split(",,");
-        for(var i=0; i<csv.length; i += 2){
-          leagues[csv[i]] = []
-          var players = csv[i+1].split("\n")
-          for(var j = 0; j<players.length; j++){
-            var values = players[j].split(",")
-              if(values[0] == ""){
-                  continue
-              }
-            leagues[csv[i]].push({"name":values[0], "email":values[1],"phone":values[2]})
-          }
+        for (var i = 0; i < csv.length; i += 2) {
+            if (csv[i] == "") {
+                continue
+            }
+            var division = csv[i].replace(/\\n/g, '').trim();
+            leagues[division] = []
+            var playersString = csv[i + 1]
+            if (!(!!playersString)) {
+                continue
+            }
+            var players = csv[i + 1].split("\n")
+            for (var j = 0; j < players.length; j++) {
+                var values = players[j].split(",")
+                if (values[0] == "") {
+                    continue
+                }
+                leagues[division].push({"name": values[0], "email": values[1], "phone": values[2]})
+            }
         }
-        res.end("");
+        res.end(JSON.stringify(leagues));
     });
 
     return;
