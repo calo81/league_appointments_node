@@ -18,7 +18,7 @@ App.FileUploadComponent = Ember.FileField.extend({
 
 App.Router.map(function () {
     this.resource('leagues', {path: "/leagues"}, function () {
-        this.route('league', {path: "/:league_id"});
+        this.resource('league', {path: "/:league_id"});
     });
 });
 
@@ -29,12 +29,16 @@ App.LeaguesRoute = Ember.Route.extend({
 });
 
 
-App.LeaguesLeagueRoute = Ember.Route.extend({
+App.LeagueRoute = Ember.Route.extend({
     model: function (league) {
         return this.store.find('league', league.league_id)
     }
 });
 App.LeaguesController = Ember.ArrayController.extend({
+
+});
+
+App.LeagueController = Ember.Controller.extend({
 
 });
 
