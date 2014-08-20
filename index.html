@@ -10,7 +10,7 @@
 </head>
 <body>
   <script type="text/x-handlebars">
-	<div class="btn-group">
+	<div class="btn-group" style="padding: 10px">
 	  <button type="button" class="btn btn-danger">General</button>
 	  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
 	    <span class="caret"></span>
@@ -25,6 +25,20 @@
               New League
             {{/link-to}}</li>
 	  </ul>
+     </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-danger">My account</button>
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>{{#link-to "identify"}}
+                Login
+                {{/link-to}}
+            </li>
+            <li>My league</li>
+        </ul>
 	</div>
     {{outlet}}
   </script>
@@ -78,6 +92,15 @@
 
   <script type="text/x-handlebars" id="upload">
       {{file-upload url="/upload"}}
+  </script>
+
+  <script type="text/x-handlebars" id ="identify">
+      <div class="input-group" style="width: 50%">
+          {{input type="text" valueBinding="firstName" class="form-control"}}
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" {{action "login"}}>Input your email address and press here</button>
+          </span>
+      </div><!-- /input-group -->
   </script>
 
   <script src="js/libs/jquery-1.10.2.js"></script>

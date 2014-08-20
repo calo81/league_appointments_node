@@ -20,6 +20,7 @@ App.Router.map(function () {
     this.resource('leagues', {path: "/leagues"});
     this.route('upload', {path: "/upload"});
     this.resource('league', {path: "/leagues/:league_id"});
+    this.route('identify', {path: "/identify"})
 });
 
 App.LeaguesRoute = Ember.Route.extend({
