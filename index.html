@@ -5,13 +5,13 @@
   <title>Leaguatelo</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css">
 </head>
 <body>
   <script type="text/x-handlebars">
 	<div class="btn-group">
-	  <button type="button" class="btn btn-danger">My Account</button>
+	  <button type="button" class="btn btn-danger">General</button>
 	  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
 	    <span class="caret"></span>
 	    <span class="sr-only">Toggle Dropdown</span>
@@ -21,15 +21,35 @@
               Leagues
             {{/link-to}}</li>
 	    <li><a href="#">Results</a></li>
+        <li>{{#link-to "upload"}}
+              New League
+            {{/link-to}}</li>
 	  </ul>
 	</div>
     {{outlet}}
   </script>
 
   <script type="text/x-handlebars" id="league">
-	<div>
-	   AAAAAAAAAAAAAAAAAJSHDKJASH
-    </div>
+      <div>
+          <table class="table table-striped">
+              <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each item in model.players}}
+              <tr>
+                  <td>{{item.name}}</td>
+                  <td>{{item.email}}</td>
+                  <td>{{item.phone}}</td>
+              </tr>
+              {{/each}}
+              </tbody>
+          </table>
+      </div>
   </script>
 
   <script type="text/x-handlebars" id="leagues">
@@ -56,7 +76,7 @@
       </div>
   </script>
 
-  <script type="text/x-handlebars" id="index">
+  <script type="text/x-handlebars" id="upload">
       {{file-upload url="/upload"}}
   </script>
 
@@ -66,7 +86,7 @@
   <script src="js/libs/ember-uploader.min.js"></script>
   <script src="js/libs/ember-data.js"></script>
   <script src="js/app.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="js/libs/bootstrap.min.js"></script>
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>
 </body>

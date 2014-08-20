@@ -6,9 +6,7 @@ var formidable = require('formidable');
 var util = require('util');
 var cache = {};
 var XLS = require('xlsjs');
-
-var leagues = {}
-var leaguesArray = []
+var leaguesArray = [];
 
 function sendFile(response, filePath, fileContents) {
     response.writeHead(
@@ -50,37 +48,44 @@ function saveLeagueFile(req, res) {
 
     form.parse(req, function (err, fields, files) {
         res.writeHead(200, {'content-type': 'text/plain'});
-        var wb = XLS.readFile(files.file.path);
-        var ws = wb.Sheets[wb.SheetNames[0]];
-        var csv = XLS.utils.sheet_to_csv(ws).split(",,");
-        for (var i = 0; i < csv.length; i += 2) {
-            var division = csv[i].replace(/\\n/g, '').trim();
-            if (division == "") {
-                continue
-            }
-            leagues[division] = []
-            leaguesArray.push({"id": i, "name": division})
-            var playersString = csv[i + 1]
-            if (!(!!playersString)) {
-                continue
-            }
-            var players = csv[i + 1].split("\n")
-            for (var j = 0; j < players.length; j++) {
-                var values = players[j].split(",")
-                if (values[0] == "") {
-                    continue
-                }
-                var id = i + "" + j
-                leagues[division].push({"id": id, "name": values[0], "email": values[1], "phone": values[2]})
-            }
-        }
-        res.end(JSON.stringify(leagues));
+        fs.createReadStream(files.file.path).pipe(fs.createWriteStream('leagues.xls'));
     });
 
     return;
 }
 
+function loadLeaguesInArray() {
+    leaguesArray = []
+    var wb = XLS.readFile('leagues.xls');
+    var ws = wb.Sheets[wb.SheetNames[0]];
+    var csv = XLS.utils.sheet_to_csv(ws).split(",,");
+    for (var i = 0; i < csv.length; i += 2) {
+        var divisionIndex = i/2
+        var division = csv[i].replace(/\\n/g, '').trim();
+        if (division == "") {
+            continue
+        }
+        leaguesArray.push({"id": divisionIndex, "name": division, "players": []})
+        var playersString = csv[i + 1]
+        if (!(!!playersString)) {
+            continue
+        }
+        var players = csv[i + 1].split("\n")
+        for (var j = 0; j < players.length; j++) {
+            var values = players[j].split(",")
+            if (values[0] == "") {
+                continue
+            }
+            var id = i + "" + j
+            leaguesArray[divisionIndex]["players"].push({"id": id, "name": values[0], "email": values[1], "phone": values[2]})
+        }
+    }
+}
+
 function serveLeagues(req, res){
+    if(leaguesArray.length == 0){
+      loadLeaguesInArray();
+    }
     res.end(JSON.stringify({"leagues": leaguesArray}));
 }
 

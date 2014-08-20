@@ -17,9 +17,9 @@ App.FileUploadComponent = Ember.FileField.extend({
 });
 
 App.Router.map(function () {
-    this.resource('leagues', {path: "/leagues"}, function () {
-        this.resource('league', {path: "/:league_id"});
-    });
+    this.resource('leagues', {path: "/leagues"});
+    this.route('upload', {path: "/upload"});
+    this.resource('league', {path: "/leagues/:league_id"});
 });
 
 App.LeaguesRoute = Ember.Route.extend({
@@ -38,16 +38,25 @@ App.LeaguesController = Ember.ArrayController.extend({
 
 });
 
-App.LeagueController = Ember.Controller.extend({
+App.LeagueController = Ember.ObjectController.extend({
 
 });
 
-App.League = DS.Model.extend({
-    name: DS.attr('string')
-});
-
-App.Person = DS.Model.extend({
+App.Player = DS.Model.extend({
     name: DS.attr('string'),
     email: DS.attr('string'),
     phone: DS.attr('string')
 });
+
+App.LeagueSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+    attrs: {
+        players: {embedded: 'always'}
+    }
+})
+
+App.League = DS.Model.extend({
+    name: DS.attr('string'),
+    players: DS.hasMany('player')
+});
+
+
