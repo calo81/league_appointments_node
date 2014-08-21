@@ -99,7 +99,9 @@ http.createServer(function (req, res) {
         saveLeagueFile(req, res)
     } else if (req.url == '/leagues') {
         serveLeagues(req, res)
-    }  else {
+    } else if (req.url == '/users') {
+        serveLeagues(req, res)
+    }   else {
         filePath = req.url;
         serveStatic(res, cache, './' + filePath);
     }

@@ -43,10 +43,25 @@ App.LeagueController = Ember.ObjectController.extend({
 
 });
 
+App.IdentifyController = Ember.ObjectController.extend({
+    email: null,
+    actions: {
+        login: function () {
+            var email = this.get('email');
+            App.CurrentUser = this.store.find('user', email);
+        }
+    }
+});
+
 App.Player = DS.Model.extend({
     name: DS.attr('string'),
     email: DS.attr('string'),
     phone: DS.attr('string')
+});
+
+App.User = DS.Model.extend({
+   email: DS.attr('string'),
+   league: DS.attr('string')
 });
 
 App.LeagueSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
