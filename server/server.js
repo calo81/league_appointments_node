@@ -1,4 +1,5 @@
 var http = require('http');
+var express = require('express');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
@@ -7,6 +8,8 @@ var util = require('util');
 var cache = {};
 var XLS = require('xlsjs');
 var leaguesArray = [];
+var userHash = {};
+var app = express();
 
 function sendFile(response, filePath, fileContents) {
     response.writeHead(
@@ -56,6 +59,7 @@ function saveLeagueFile(req, res) {
 
 function loadLeaguesInArray() {
     leaguesArray = []
+    userHash = {}
     var wb = XLS.readFile('leagues.xls');
     var ws = wb.Sheets[wb.SheetNames[0]];
     var csv = XLS.utils.sheet_to_csv(ws).split(",,");
@@ -78,6 +82,7 @@ function loadLeaguesInArray() {
             }
             var id = i + "" + j
             leaguesArray[divisionIndex]["players"].push({"id": id, "name": values[0], "email": values[1], "phone": values[2]})
+            userHash[values[1]] = {"id": id, "name": values[0], "email": values[1], "league": divisionIndex}
         }
     }
 }
@@ -89,21 +94,44 @@ function serveLeagues(req, res){
     res.end(JSON.stringify({"leagues": leaguesArray}));
 }
 
-
-http.createServer(function (req, res) {
-    var filePath = null
-    if (req.url == '/') {
-        filePath = 'index.html';
-        serveStatic(res, cache, './' + filePath);
-    } else if (req.url == '/upload') {
-        saveLeagueFile(req, res)
-    } else if (req.url == '/leagues') {
-        serveLeagues(req, res)
-    } else if (req.url == '/users') {
-        serveLeagues(req, res)
-    }   else {
-        filePath = req.url;
-        serveStatic(res, cache, './' + filePath);
+function findUserForEmail(email){
+    if(Object.getOwnPropertyNames(userHash).length == 0){
+        loadLeaguesInArray();
     }
-}).listen(3000);
+    return userHash[email];
+}
+
+app.get('/', function(req, res){
+    var filePath = 'index.html';
+    serveStatic(res, cache, './' + filePath);
+});
+
+app.get('/upload', function(req, res){
+    saveLeagueFile(req, res);
+});
+
+app.get('/leagues', function(req, res){
+    serveLeagues(req, res);
+});
+
+app.get('/users/:user_id', function(req, res){
+  var user = findUserForEmail(req.params.user_id)
+  if(!user) {
+    user = {
+        "name": "none",
+        "league": "none",
+        "email": "none",
+        "id": "none"
+    }
+  }
+  res.end(JSON.stringify({"user": user}));
+});
+
+app.use(function(req, res){
+    var filePath = req.url;
+    serveStatic(res, cache, './' + filePath);
+});
+
+app.listen(3000);
+
 console.log('Server running at http://localhost:3000/');

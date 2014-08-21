@@ -8,7 +8,8 @@
   "dependencies": {
       "formidable": ">=1.0.15",
       "mime": ">=1.2.11",
-      "xlsjs": ">=0.7.1"
+      "xlsjs": ">=0.7.1",
+      "express": ">=4.8.5"
   },
   "devDependencies": {
     "mocha": "*",

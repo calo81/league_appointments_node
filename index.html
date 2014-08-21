@@ -37,7 +37,9 @@
                 Login
                 {{/link-to}}
             </li>
-            <li>My league</li>
+            <li>{{#link-to "league" App.CurrentUser.league}}
+               My League
+                {{/link-to}}</li>
         </ul>
 	</div>
     {{outlet}}
