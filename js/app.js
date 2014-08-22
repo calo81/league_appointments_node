@@ -113,7 +113,11 @@ App.LeaguesController = Ember.ArrayController.extend({
 });
 
 App.LeagueController = Ember.ObjectController.extend({
-
+  actions: {
+      challengePlayer: function(playerEmail, date){
+          alert(playerEmail + ' challenged! to play on ' + date)
+      }
+  }
 });
 
 App.IdentifyController = Ember.ObjectController.extend({
@@ -144,9 +148,16 @@ App.IdentifyController = Ember.ObjectController.extend({
 
 App.LeagueView = Em.View.extend({
     didInsertElement: function () {
+        var view = this
         $(".form_datetime").datetimepicker({
-            format: "dd MM yyyy - hh:ii"
-        });
+            format: "dd/mm - hh:ii",
+            autoclose: true,
+            maxView: 2,
+            todayHighlight: true
+        }).on('changeDate', function (ev) {
+              var emailChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field").val();
+              view.get("controller").send("challengePlayer", emailChallenged, ev.date);
+            });
     }
 });
 

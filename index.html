@@ -72,9 +72,12 @@
                   <td>{{item.email}}</td>
                   <td>{{item.phone}}</td>
                   <td>
-                      <div class="input-append date form_datetime">
-                          <input size="16" type="text" value="" readonly>
-                          <span class="add-on"><i class="icon-th"></i></span>
+                      <div class='the-date'>
+                        <div class="input-append date form_datetime">
+                            <input size="16" type="text" value="" readonly/>
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>
+                          {{input type="hidden" valueBinding="item.email"}}
                       </div>
                       </td>
               </tr>
