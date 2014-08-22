@@ -1,5 +1,35 @@
 var App = Ember.Application.create();
 
+App.BrowserStore = {
+    storage: function () {
+        return window.localStorage;
+    },
+
+    saveUser: function (user) {
+        function toJson(user) {
+            return {
+                "name": user.get('name'),
+                "league": user.get('league'),
+                "email": user.get('email'),
+                "id": user.get('id')
+            }
+        }
+
+        this.storage().setItem('currentUser', JSON.stringify(toJson(user)));
+    },
+
+    loadUser: function (emberStore) {
+        var jsonUser = JSON.parse(this.storage().getItem('currentUser'));
+        if (!jsonUser) {
+            return null;
+        }
+        var user = emberStore.find('user', jsonUser.email);
+        return user;
+    }
+}
+
+App.localStore = App.BrowserStore;
+
 App.FileUploadComponent = Ember.FileField.extend({
     url: '',
     filesDidChange: (function () {
@@ -53,6 +83,19 @@ App.MyleagueRoute = Ember.Route.extend({
     }
 });
 
+App.IdentifyRoute = Ember.Route.extend({
+    beforeModel: function () {
+        var controller = this;
+        if (App.localStore.loadUser(this.store)) {
+            App.CurrentUser = App.localStore.loadUser(this.store);
+            App.CurrentUser.then(function () {
+                controller.transitionTo('myleague');
+            })
+
+        }
+    }
+});
+
 
 App.LeagueRoute = Ember.Route.extend({
     beforeModel: function () {
@@ -86,15 +129,24 @@ App.IdentifyController = Ember.ObjectController.extend({
                     controller.set('error', 'User not found, please retry')
                     controller.set('email', null)
                     controller.transitionToRoute('identify');
-                }else{
-                  controller.set('error', null)
-                  App.CurrentUser = foundUser
-                  controller.transitionToRoute('myleague');
+                } else {
+                    controller.set('error', null)
+                    App.CurrentUser = foundUser
+                    App.localStore.saveUser(foundUser);
+                    controller.transitionToRoute('myleague');
                 }
             });
 
 
         }
+    }
+});
+
+App.LeagueView = Em.View.extend({
+    didInsertElement: function () {
+        $(".form_datetime").datetimepicker({
+            format: "dd MM yyyy - hh:ii"
+        });
     }
 });
 
