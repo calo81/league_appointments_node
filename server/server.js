@@ -94,6 +94,13 @@ function serveLeagues(req, res){
     res.end(JSON.stringify({"leagues": leaguesArray}));
 }
 
+function serveLeague(req, res){
+    if(leaguesArray.length == 0){
+        loadLeaguesInArray();
+    }
+    res.end(JSON.stringify({"leagues": leaguesArray[req.params.league_id]}));
+}
+
 function findUserForEmail(email){
     if(Object.getOwnPropertyNames(userHash).length == 0){
         loadLeaguesInArray();
@@ -112,6 +119,10 @@ app.get('/upload', function(req, res){
 
 app.get('/leagues', function(req, res){
     serveLeagues(req, res);
+});
+
+app.get('/leagues/:league_id', function(req, res){
+    serveLeague(req, res);
 });
 
 app.get('/users/:user_id', function(req, res){

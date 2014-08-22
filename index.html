@@ -97,6 +97,9 @@
   </script>
 
   <script type="text/x-handlebars" id ="identify">
+      {{#if error}}
+        <div><span class="label label-warning">{{error}}</span></div>
+      {{/if}}
       <div class="input-group" style="width: 50%">
           {{input type="text" valueBinding="email" class="form-control"}}
           <span class="input-group-btn">

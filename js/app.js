@@ -25,19 +25,42 @@ App.Router.map(function () {
 });
 
 App.LeaguesRoute = Ember.Route.extend({
+    beforeModel: function () {
+        if (!App.CurrentUser) {
+            this.transitionTo('identify');
+        }
+    },
+
     model: function () {
         return this.store.find('league')
     }
 });
 
+App.IndexRoute = Ember.Route.extend({
+    beforeModel: function () {
+        if (!App.CurrentUser) {
+            this.transitionTo('identify');
+        }
+    }
+});
+
 App.MyleagueRoute = Ember.Route.extend({
-   beforeModel: function(){
-       this.transitionTo("league", App.CurrentUser.get('league'))
-   }
+    beforeModel: function () {
+        if (!App.CurrentUser) {
+            this.transitionTo('identify');
+        }
+        this.transitionTo("league", App.CurrentUser.get('league'))
+    }
 });
 
 
 App.LeagueRoute = Ember.Route.extend({
+    beforeModel: function () {
+        if (!App.CurrentUser) {
+            this.transitionTo('identify');
+        }
+    },
+
     model: function (league) {
         return this.store.find('league', league.league_id)
     }
@@ -52,10 +75,25 @@ App.LeagueController = Ember.ObjectController.extend({
 
 App.IdentifyController = Ember.ObjectController.extend({
     email: null,
+    error: null,
     actions: {
         login: function () {
+            var controller = this;
             var email = this.get('email');
-            App.CurrentUser = this.store.find('user', email);
+            var foundUser = this.store.find('user', email);
+            foundUser.then(function () {
+                if (foundUser.get('email') == 'none') {
+                    controller.set('error', 'User not found, please retry')
+                    controller.set('email', null)
+                    controller.transitionToRoute('identify');
+                }else{
+                  controller.set('error', null)
+                  App.CurrentUser = foundUser
+                  controller.transitionToRoute('myleague');
+                }
+            });
+
+
         }
     }
 });
@@ -67,8 +105,8 @@ App.Player = DS.Model.extend({
 });
 
 App.User = DS.Model.extend({
-   email: DS.attr('string'),
-   league: DS.attr('string')
+    email: DS.attr('string'),
+    league: DS.attr('string')
 });
 
 App.LeagueSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
