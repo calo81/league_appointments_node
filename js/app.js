@@ -21,12 +21,19 @@ App.Router.map(function () {
     this.route('upload', {path: "/upload"});
     this.resource('league', {path: "/leagues/:league_id"});
     this.route('identify', {path: "/identify"})
+    this.route('myleague', {path: "/leagues/mine"})
 });
 
 App.LeaguesRoute = Ember.Route.extend({
     model: function () {
         return this.store.find('league')
     }
+});
+
+App.MyleagueRoute = Ember.Route.extend({
+   beforeModel: function(){
+       this.transitionTo("league", App.CurrentUser.get('league'))
+   }
 });
 
 
