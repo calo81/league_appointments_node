@@ -143,6 +143,6 @@ app.use(function(req, res){
     serveStatic(res, cache, './' + filePath);
 });
 
-app.listen(80);
+app.listen(process.env.PORT || 3000);
 
-console.log('Server running at http://localhost:80/');
+console.log('Server running at http://localhost:'+process.env.PORT || 3000);
