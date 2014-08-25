@@ -87,8 +87,8 @@ App.IdentifyRoute = Ember.Route.extend({
     beforeModel: function () {
         var controller = this;
         if (App.localStore.loadUser(this.store)) {
-            App.CurrentUser = App.localStore.loadUser(this.store);
-            App.CurrentUser.then(function () {
+            App.localStore.loadUser(this.store).then(function (user) {
+                App.CurrentUser = user
                 controller.transitionTo('myleague');
             })
 
@@ -113,13 +113,13 @@ App.LeaguesController = Ember.ArrayController.extend({
 });
 
 App.LeagueController = Ember.ObjectController.extend({
-  actions: {
-      challengePlayer: function(playerEmail, playerName, date){
-          alert(playerEmail + ' challenged! to play on ' + date);
-          document.location.href = "mailto:" +playerEmail+"?subject="+encodeURIComponent("Tennis League Match")+
-              "&body="+encodeURIComponent("Hi "+playerName.split(" ")[0]+"\nDo you want to play our league match on " + date +"? .\n\nKind Regards,\n\n"+App.CurrentUser.content._data.name);
-      }
-  }
+    actions: {
+        challengePlayer: function (playerEmail, playerName, date) {
+            alert(playerEmail + ' challenged! to play on ' + date);
+            document.location.href = "mailto:" + playerEmail + "?subject=" + encodeURIComponent("Tennis League Match") +
+                "&body=" + encodeURIComponent("Hi " + playerName.split(" ")[0] + "\nDo you want to play our league match on " + date + "? .\n\nKind Regards,\n\n" + App.CurrentUser._data.name);
+        }
+    }
 });
 
 App.IdentifyController = Ember.ObjectController.extend({
@@ -129,8 +129,7 @@ App.IdentifyController = Ember.ObjectController.extend({
         login: function () {
             var controller = this;
             var email = this.get('email');
-            var foundUser = this.store.find('user', email);
-            foundUser.then(function () {
+            this.store.find('user', email).then(function (foundUser) {
                 if (foundUser.get('email') == 'none') {
                     controller.set('error', 'User not found, please retry')
                     controller.set('email', null)
@@ -158,9 +157,9 @@ App.LeagueView = Em.View.extend({
             todayHighlight: true,
             minuteStep: 30
         }).on('changeDate', function (ev) {
-              var emailChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.email-to-challenge").val();
-              var nameChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.name-to-challenge").val();
-              view.get("controller").send("challengePlayer", emailChallenged, nameChallenged, ev.date);
+                var emailChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.email-to-challenge").val();
+                var nameChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.name-to-challenge").val();
+                view.get("controller").send("challengePlayer", emailChallenged, nameChallenged, ev.date);
             });
     }
 });
