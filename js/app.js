@@ -114,9 +114,10 @@ App.LeaguesController = Ember.ArrayController.extend({
 
 App.LeagueController = Ember.ObjectController.extend({
   actions: {
-      challengePlayer: function(playerEmail, date){
+      challengePlayer: function(playerEmail, playerName, date){
           alert(playerEmail + ' challenged! to play on ' + date);
-          document.location.href = "mailto:" +playerEmail+"?subject="+encodeURIComponent("Tennis League Match")+"&body="+encodeURIComponent("Hi\nJust wondering if you would like to play our League Match on " + date);
+          document.location.href = "mailto:" +playerEmail+"?subject="+encodeURIComponent("Tennis League Match")+
+              "&body="+encodeURIComponent("Hi "+playerName.split(" ")[0]+"\nDo you want to play our league match on " + date +"? .\n\nKind Regards,\n\n"+App.CurrentUser.content._data.name);
       }
   }
 });
@@ -154,10 +155,12 @@ App.LeagueView = Em.View.extend({
             format: "dd/mm - hh:ii",
             autoclose: true,
             maxView: 2,
-            todayHighlight: true
+            todayHighlight: true,
+            minuteStep: 30
         }).on('changeDate', function (ev) {
-              var emailChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field").val();
-              view.get("controller").send("challengePlayer", emailChallenged, ev.date);
+              var emailChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.email-to-challenge").val();
+              var nameChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.name-to-challenge").val();
+              view.get("controller").send("challengePlayer", emailChallenged, nameChallenged, ev.date);
             });
     }
 });
