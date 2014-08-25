@@ -115,7 +115,7 @@ App.LeaguesController = Ember.ArrayController.extend({
 App.LeagueController = Ember.ObjectController.extend({
     actions: {
         challengePlayer: function (playerEmail, playerName, date) {
-            alert(playerEmail + ' challenged! to play on ' + date);
+            date.setSeconds(0)
             document.location.href = "mailto:" + playerEmail + "?subject=" + encodeURIComponent("Tennis League Match") +
                 "&body=" + encodeURIComponent("Hi " + playerName.split(" ")[0] + "\n\nDo you want to play our league match on " + date.toGMTString() + "? .\n\nKind Regards,\n\n" + App.CurrentUser._data.name);
         }
