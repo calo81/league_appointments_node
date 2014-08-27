@@ -112,12 +112,31 @@ App.LeaguesController = Ember.ArrayController.extend({
 
 });
 
+App.PlayerController = Ember.ObjectController.extend({
+    actions: {
+        saveResult: function (value) {
+
+        }
+    }
+});
+
 App.LeagueController = Ember.ObjectController.extend({
     actions: {
         challengePlayer: function (playerEmail, playerName, date) {
             date.setSeconds(0)
             document.location.href = "mailto:" + playerEmail + "?subject=" + encodeURIComponent("Tennis League Match") +
                 "&body=" + encodeURIComponent("Hi " + playerName.split(" ")[0] + "\n\nDo you want to play our league match on " + date.toGMTString() + "? .\n\nKind Regards,\n\n" + App.CurrentUser._data.name);
+        },
+
+        saveResult: function (player) {
+            alert(player.get("name"))
+            alert(player.result)
+            var result = this.store.createRecord('result', {
+                email1: App.CurrentUser.get('email'),
+                email2: player.get('email'),
+                result: player.result
+            });
+            result.save()
         }
     }
 });
@@ -173,6 +192,12 @@ App.Player = DS.Model.extend({
 App.User = DS.Model.extend({
     email: DS.attr('string'),
     league: DS.attr('string')
+});
+
+App.Result = DS.Model.extend({
+    email1: DS.attr('string'),
+    email2: DS.attr('string'),
+    result: DS.attr('string')
 });
 
 App.LeagueSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {

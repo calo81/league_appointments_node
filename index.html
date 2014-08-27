@@ -63,6 +63,7 @@
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Challenge!</th>
+                  <th>Result</th>
               </tr>
               </thead>
               <tbody>
@@ -80,7 +81,8 @@
                           {{input class="email-to-challenge" type="hidden" valueBinding="item.email"}}
                           {{input class="name-to-challenge" type="hidden" valueBinding="item.name"}}
                       </div>
-                      </td>
+                  </td>
+                  <td>{{input type="text" valueBinding="item.result"}}<button {{action "saveResult" item}}>✓</button></td>
               </tr>
               {{/each}}
               </tbody>
