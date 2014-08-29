@@ -129,8 +129,6 @@ App.LeagueController = Ember.ObjectController.extend({
         },
 
         saveResult: function (player) {
-            alert(player.get("name"))
-            alert(player.result)
             var result = this.store.createRecord('result', {
                 email1: App.CurrentUser.get('email'),
                 email2: player.get('email'),
@@ -191,7 +189,13 @@ App.LeagueView = Em.View.extend({
 App.Player = DS.Model.extend({
     name: DS.attr('string'),
     email: DS.attr('string'),
-    phone: DS.attr('string')
+    phone: DS.attr('string'),
+    result: function () {
+        this.store.find('result', App.CurrentUser.get('email')).then(function(results){
+            alert('jjj')
+            return '9-1  |  7-6  |  4-6'
+        })
+    }.property( 'result' )
 });
 
 App.User = DS.Model.extend({

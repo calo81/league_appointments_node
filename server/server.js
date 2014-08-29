@@ -112,7 +112,14 @@ function findUserForEmail(email){
 }
 
 function saveResult(result) {
-  results[result.email1] = result
+    if(!results[result.email1]){
+        results[result.email1] = []
+    }
+  results[result.email1].push(result)
+}
+
+function getResults(player_email) {
+  results[player_email]
 }
 
 app.get('/', function(req, res){
@@ -150,8 +157,8 @@ app.post('/results', function(req, res){
   res.end('OK')
 });
 
-app.get('/results/:player_id', function(req, res){
-    res.end(JSON.stringify({"results": getResults(req.params.player_id)}));
+app.get('/results/:player_email', function(req, res){
+    res.end(JSON.stringify({"results": getResults(req.params.player_email)}));
 });
 
 app.use(function(req, res){
