@@ -7,9 +7,12 @@ var formidable = require('formidable');
 var util = require('util');
 var cache = {};
 var XLS = require('xlsjs');
+var bodyParser = require('body-parser')
 var leaguesArray = [];
 var userHash = {};
+var results = {}
 var app = express();
+app.use(bodyParser.json());
 
 function sendFile(response, filePath, fileContents) {
     response.writeHead(
@@ -108,6 +111,10 @@ function findUserForEmail(email){
     return userHash[email];
 }
 
+function saveResult(result) {
+  results[result.email1] = result
+}
+
 app.get('/', function(req, res){
     var filePath = 'index.html';
     serveStatic(res, cache, './' + filePath);
@@ -138,6 +145,15 @@ app.get('/users/:user_id', function(req, res){
   res.end(JSON.stringify({"user": user}));
 });
 
+app.post('/results', function(req, res){
+  saveResult(req.body.result)
+  res.end('OK')
+});
+
+app.get('/results/:player_id', function(req, res){
+    res.end(JSON.stringify({"results": getResults(req.params.player_id)}));
+});
+
 app.use(function(req, res){
     var filePath = req.url;
     serveStatic(res, cache, './' + filePath);
@@ -145,4 +161,4 @@ app.use(function(req, res){
 
 app.listen(process.env.PORT || 3000);
 
-console.log('Server running at http://localhost:'+process.env.PORT || 3000);
+console.log('Server running at http://localhost:'+(process.env.PORT || 3000));

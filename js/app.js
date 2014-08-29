@@ -180,6 +180,11 @@ App.LeagueView = Em.View.extend({
                 var nameChallenged = $(ev.currentTarget.parentNode).children(".ember-text-field.name-to-challenge").val();
                 view.get("controller").send("challengePlayer", emailChallenged, nameChallenged, ev.date);
             });
+
+        $('.match-result').formatter({
+            'pattern': '{{9}}-{{9}}  |  {{9}}-{{9}}  |  {{9}}-{{9}}',
+            'persistent': true
+        });
     }
 });
 

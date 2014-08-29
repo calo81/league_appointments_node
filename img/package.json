@@ -9,7 +9,8 @@
       "formidable": ">=1.0.15",
       "mime": ">=1.2.11",
       "xlsjs": ">=0.7.1",
-      "express": ">=4.8.5"
+      "express": ">=4.8.5",
+      "body-parser": ">=1.6.6"
   },
   "devDependencies": {
     "mocha": "*",

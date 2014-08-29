@@ -82,7 +82,7 @@
                           {{input class="name-to-challenge" type="hidden" valueBinding="item.name"}}
                       </div>
                   </td>
-                  <td>{{input type="text" valueBinding="item.result"}}<button {{action "saveResult" item}}>✓</button></td>
+                  <td>{{input type="text" class="match-result" valueBinding="item.result"}}<button {{action "saveResult" item}}>✓</button></td>
               </tr>
               {{/each}}
               </tbody>
@@ -135,6 +135,7 @@
   <script src="js/libs/ember-1.6.1.js"></script>
   <script src="js/libs/ember-uploader.min.js"></script>
   <script src="js/libs/ember-data.js"></script>
+  <script src="js/libs/jquery.formatter.js"></script>
   <script src="js/app.js"></script>
   <script src="js/libs/bootstrap.min.js"></script>
   <script src="js/libs/bootstrap-datetimepicker.js"></script>
