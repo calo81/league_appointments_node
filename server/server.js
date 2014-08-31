@@ -9,6 +9,7 @@ var cache = {};
 var XLS = require('xlsjs');
 var bodyParser = require('body-parser')
 var Store = require("jfs");
+require('array.prototype.find');
 var db = new Store("db");
 var leaguesArray = [];
 var userHash = {};
@@ -124,8 +125,17 @@ function saveResult(result) {
 	    if (!results[email]) {
 	        results[email] = []
 	    }
-	    result.id = email + email2
-	    results[email].push(result)
+		var resultId = email + email2
+		var existent = results[email].find(function(result) {
+			return result.id == resultId;
+		});
+		
+		if(existent){
+		  existent.result = result.result
+		}else{
+	      result.id = resultId
+	      results[email].push(result)
+	    }
 	    db.save("results", results, function(err){
 
 	    });	
@@ -139,6 +149,8 @@ function saveResult(result) {
 	}
 	
 	function invertResult(result) {
+		// poor man's clone
+	  result = JSON.parse(JSON.stringify(result));
 	  var sets = result.result.split("|")
 	  result.result = invertSet(sets[0]) + "  |  " + invertSet(sets[1]) + "  |  " + invertSet(sets[2])  
       return result
