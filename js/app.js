@@ -134,14 +134,14 @@ App.LeagueController = Ember.ObjectController.extend({
                 email2: player.get('email'),
                 result: player.result
             });
-            result.save().then(function(){
-	              bootbox.alert('Result has been saved', function () {
-	              }), function(){
-		              bootbox.alert('ERROR SAVING RESULT!!', function () {
-		          })	
-	            }	
+            result.save().then(function () {
+                bootbox.alert('Result has been saved', function () {
+                }), function () {
+                    bootbox.alert('ERROR SAVING RESULT!!', function () {
+                    })
+                }
             });
-            
+
         }
     }
 });
@@ -194,16 +194,20 @@ App.LeagueView = Em.View.extend({
 });
 
 App.LoggedAsView = Ember.View.extend({
-  templateName: "loggedAs"
+    templateName: "loggedAs"
 })
 
 App.LoggedAsController = Ember.Controller.extend({
-  currentUser: function() {
-	var user = this
-    App.localStore.loadUser(this.store).then(function(userFound){
-    	user.set('currentUser', userFound.get('email'))
-    })
-  }.property("currentUser")
+    currentUser: function () {
+        var user = this
+        if (App.localStore.loadUser(this.store) == null) {
+            user.set('currentUser', '')
+        } else {
+            App.localStore.loadUser(this.store).then(function (userFound) {
+                user.set('currentUser', userFound.get('email'))
+            })
+        }
+    }.property("currentUser")
 })
 
 App.Player = DS.Model.extend({
