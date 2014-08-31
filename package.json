@@ -10,7 +10,8 @@
       "mime": ">=1.2.11",
       "xlsjs": ">=0.7.1",
       "express": ">=4.8.5",
-      "body-parser": ">=1.6.6"
+      "body-parser": ">=1.6.6",
+      "jfs": ">=0.1.7"
   },
   "devDependencies": {
     "mocha": "*",

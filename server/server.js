@@ -8,9 +8,16 @@ var util = require('util');
 var cache = {};
 var XLS = require('xlsjs');
 var bodyParser = require('body-parser')
+var Store = require("jfs");
+var db = new Store("db");
 var leaguesArray = [];
 var userHash = {};
 var results = {}
+db.get("results", function(err, obj){
+    if(obj){
+        results = obj
+    }
+})
 var app = express();
 app.use(bodyParser.json());
 
@@ -67,7 +74,7 @@ function loadLeaguesInArray() {
     var ws = wb.Sheets[wb.SheetNames[0]];
     var csv = XLS.utils.sheet_to_csv(ws).split(",,");
     for (var i = 0; i < csv.length; i += 2) {
-        var divisionIndex = i/2
+        var divisionIndex = i / 2
         var division = csv[i].replace(/\\n/g, '').trim();
         if (division == "") {
             continue
@@ -90,82 +97,89 @@ function loadLeaguesInArray() {
     }
 }
 
-function serveLeagues(req, res){
-    if(leaguesArray.length == 0){
-      loadLeaguesInArray();
+function serveLeagues(req, res) {
+    if (leaguesArray.length == 0) {
+        loadLeaguesInArray();
     }
     res.end(JSON.stringify({"leagues": leaguesArray}));
 }
 
-function serveLeague(req, res){
-    if(leaguesArray.length == 0){
+function serveLeague(req, res) {
+    if (leaguesArray.length == 0) {
         loadLeaguesInArray();
     }
     res.end(JSON.stringify({"leagues": leaguesArray[req.params.league_id]}));
 }
 
-function findUserForEmail(email){
-    if(Object.getOwnPropertyNames(userHash).length == 0){
+function findUserForEmail(email) {
+    if (Object.getOwnPropertyNames(userHash).length == 0) {
         loadLeaguesInArray();
     }
     return userHash[email];
 }
 
 function saveResult(result) {
-    if(!results[result.email1]){
+    if (!results[result.email1]) {
         results[result.email1] = []
     }
-  results[result.email1].push(result)
+    result.id = result.email1 + result.email2
+    results[result.email1].push(result)
+    db.save("results", results, function(err){
+
+    });
 }
 
 function getResults(player_email) {
-  results[player_email]
+    if(!results[player_email]){
+        return []
+    }
+    return results[player_email]
 }
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
     var filePath = 'index.html';
     serveStatic(res, cache, './' + filePath);
 });
 
-app.get('/upload', function(req, res){
+app.get('/upload', function (req, res) {
     saveLeagueFile(req, res);
 });
 
-app.get('/leagues', function(req, res){
+app.get('/leagues', function (req, res) {
     serveLeagues(req, res);
 });
 
-app.get('/leagues/:league_id', function(req, res){
+app.get('/leagues/:league_id', function (req, res) {
     serveLeague(req, res);
 });
 
-app.get('/users/:user_id', function(req, res){
-  var user = findUserForEmail(req.params.user_id)
-  if(!user) {
-    user = {
-        "name": "none",
-        "league": "none",
-        "email": "none",
-        "id": "none"
+app.get('/users/:user_id', function (req, res) {
+    var user = findUserForEmail(req.params.user_id)
+    if (!user) {
+        user = {
+            "name": "none",
+            "league": "none",
+            "email": "none",
+            "id": "none"
+        }
     }
-  }
-  res.end(JSON.stringify({"user": user}));
+    res.end(JSON.stringify({"user": user}));
 });
 
-app.post('/results', function(req, res){
-  saveResult(req.body.result)
-  res.end('OK')
+app.post('/results', function (req, res) {
+    saveResult(req.body.result)
+    res.end('OK')
 });
 
-app.get('/results/:player_email', function(req, res){
-    res.end(JSON.stringify({"results": getResults(req.params.player_email)}));
+app.get('/results', function (req, res) {
+    res.end(JSON.stringify({"results": getResults(req.query.player_email)}));
 });
 
-app.use(function(req, res){
+app.use(function (req, res) {
     var filePath = req.url;
     serveStatic(res, cache, './' + filePath);
 });
 
 app.listen(process.env.PORT || 3000);
 
-console.log('Server running at http://localhost:'+(process.env.PORT || 3000));
+console.log('Server running at http://localhost:' + (process.env.PORT || 3000));

@@ -135,6 +135,8 @@ App.LeagueController = Ember.ObjectController.extend({
                 result: player.result
             });
             result.save()
+            bootbox.alert('Result has been saved', function () {
+            })
         }
     }
 });
@@ -191,11 +193,17 @@ App.Player = DS.Model.extend({
     email: DS.attr('string'),
     phone: DS.attr('string'),
     result: function () {
-        this.store.find('result', App.CurrentUser.get('email')).then(function(results){
-            alert('jjj')
-            return '9-1  |  7-6  |  4-6'
+        var player = this
+        this.store.find('result', {player_email: App.CurrentUser.get('email')}).then(function (resultsPromise) {
+            resultsPromise.forEach(function (element, index, enume) {
+                if ((element.get('email1') == App.CurrentUser.get('email') && element.get('email2') == player.get('email')) ||
+                    (element.get('email2') == App.CurrentUser.get('email') && element.get('email1') == player.get('email'))) {
+                    player.set('result', element.get('result'))
+                }
+            });
+
         })
-    }.property( 'result' )
+    }.property('result')
 });
 
 App.User = DS.Model.extend({
