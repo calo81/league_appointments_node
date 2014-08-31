@@ -193,11 +193,11 @@ App.LeagueView = Em.View.extend({
     }
 });
 
-App.LoggedAsView = Em.View.extend({
+App.LoggedAsView = Ember.View.extend({
   templateName: "loggedAs"
 })
 
-App.LoggedAsController = Ember.ObjectController.extend({
+App.LoggedAsController = Ember.Controller.extend({
   currentUser: function() {
 	var user = this
     App.localStore.loadUser(this.store).then(function(userFound){

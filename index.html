@@ -17,7 +17,7 @@
           </h1>		  
       </div>
 	  <nav class="navbar navbar-default" role="navigation">
-		  {{view "loggedAs"}}
+		  {{render "loggedAs"}}
 	  </nav>
 	   
 	<div class="btn-group" style="padding: 10px">
@@ -59,7 +59,7 @@
   </script>
   
   <script type="text/x-handlebars" id="loggedAs">
-	  Logged in as {{currentUser}}
+      <p class="navbar-text">Logged in as <b>{{currentUser}}</b></p>
   </script>
 
   <script type="text/x-handlebars" id="league">
