@@ -118,15 +118,35 @@ function findUserForEmail(email) {
     return userHash[email];
 }
 
-function saveResult(result) {
-    if (!results[result.email1]) {
-        results[result.email1] = []
-    }
-    result.id = result.email1 + result.email2
-    results[result.email1].push(result)
-    db.save("results", results, function(err){
 
-    });
+function saveResult(result) {
+	function saveResultForEmail(email, email2, result){
+	    if (!results[email]) {
+	        results[email] = []
+	    }
+	    result.id = email + email2
+	    results[email].push(result)
+	    db.save("results", results, function(err){
+
+	    });	
+	}
+	
+	function invertSet(set){
+		var games = set.split("-")
+		var game1 = games[0].trim()
+		var game2 = games[1].trim()
+		return game2 + "-" + game1
+	}
+	
+	function invertResult(result) {
+	  var sets = result.result.split("|")
+	  result.result = invertSet(sets[0]) + "  |  " + invertSet(sets[1]) + "  |  " + invertSet(sets[2])  
+      return result
+	}
+	
+	saveResultForEmail(result.email1, result.email2, result)
+	saveResultForEmail(result.email2, result.email1, invertResult(result))
+	
 }
 
 function getResults(player_email) {
@@ -168,7 +188,7 @@ app.get('/users/:user_id', function (req, res) {
 
 app.post('/results', function (req, res) {
     saveResult(req.body.result)
-    res.end('OK')
+    res.end(JSON.stringify({"result": {"id": 1}}))
 });
 
 app.get('/results', function (req, res) {

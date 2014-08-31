@@ -134,9 +134,11 @@ App.LeagueController = Ember.ObjectController.extend({
                 email2: player.get('email'),
                 result: player.result
             });
-            result.save()
-            bootbox.alert('Result has been saved', function () {
-            })
+            result.save().then(function(){
+	            bootbox.alert('Result has been saved', function () {
+	            })	
+            });
+            
         }
     }
 });
