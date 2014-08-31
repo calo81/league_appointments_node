@@ -14,8 +14,12 @@
       <div class="page-header">
           <h1>Leaguatelo
               <small>Find and schedule your league match</small>
-          </h1>
+          </h1>		  
       </div>
+	  <nav class="navbar navbar-default" role="navigation">
+		  {{view "loggedAs"}}
+	  </nav>
+	   
 	<div class="btn-group" style="padding: 10px">
 	  <button type="button" class="btn btn-danger">General</button>
 	  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -53,9 +57,18 @@
           Cacique Technologies LTD
       </div>
   </script>
+  
+  <script type="text/x-handlebars" id="loggedAs">
+	  Logged in as {{currentUser}}
+  </script>
 
   <script type="text/x-handlebars" id="league">
       <div>
+		  <div>
+			  <h3>
+				  This is LEAGUE "{{model.name}}"
+			  </h3>
+		  </div>
           <table class="table table-striped">
               <thead>
               <tr>

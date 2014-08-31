@@ -193,6 +193,19 @@ App.LeagueView = Em.View.extend({
     }
 });
 
+App.LoggedAsView = Em.View.extend({
+  templateName: "loggedAs"
+})
+
+App.LoggedAsController = Ember.ObjectController.extend({
+  currentUser: function() {
+	var user = this
+    App.localStore.loadUser(this.store).then(function(userFound){
+    	user.set('currentUser', userFound.get('email'))
+    })
+  }.property("currentUser")
+})
+
 App.Player = DS.Model.extend({
     name: DS.attr('string'),
     email: DS.attr('string'),
