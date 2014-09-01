@@ -162,6 +162,7 @@ App.IdentifyController = Ember.ObjectController.extend({
                     controller.set('error', null)
                     App.CurrentUser = foundUser
                     App.localStore.saveUser(foundUser);
+                    App.loggedAsControllerInstance.set('currentUser', foundUser.get('email'))
                     controller.transitionToRoute('myleague');
                 }
             });
@@ -197,8 +198,10 @@ App.LoggedAsView = Ember.View.extend({
     templateName: "loggedAs"
 })
 
+
 App.LoggedAsController = Ember.Controller.extend({
     currentUser: function () {
+        App.loggedAsControllerInstance = this;
         var user = this
         if (App.localStore.loadUser(this.store) == null) {
             user.set('currentUser', '')
