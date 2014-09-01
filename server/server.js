@@ -10,7 +10,7 @@ var XLS = require('xlsjs');
 var bodyParser = require('body-parser')
 var Store = require("jfs");
 require('array.prototype.find');
-var db = new Store("db");
+var db = new Store(__dirname + "/../db");
 var leaguesArray = [];
 var userHash = {};
 var results = {}
