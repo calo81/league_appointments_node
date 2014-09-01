@@ -137,7 +137,7 @@ function saveResult(result) {
 	      results[email].push(result)
 	    }
 	    db.save("results", results, function(err){
-
+          console.log('Error saving results ' + err);
 	    });	
 	}
 	
