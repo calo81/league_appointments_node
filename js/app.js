@@ -217,6 +217,16 @@ App.Player = DS.Model.extend({
     name: DS.attr('string'),
     email: DS.attr('string'),
     phone: DS.attr('string'),
+    points: function(){
+      if(this.won(this.get('result'))){
+        return 4;
+      }else if(this.lost(this.get('result'))){
+        return 0;
+      }else{
+          return ''
+      }
+    }.property('result'),
+
     result: function () {
         var player = this
         this.store.find('result', {player_email: App.CurrentUser.get('email')}).then(function (resultsPromise) {
@@ -228,7 +238,47 @@ App.Player = DS.Model.extend({
             });
 
         })
-    }.property('result')
+    }.property('result'),
+
+    setsFromResults: function(result, callback){
+        if(!result){
+            callback(0,0)
+            return
+        }
+        var sets = result.split('|')
+        var wonSets = 0
+        var lostSets = 0
+        sets.forEach(function(setx){
+            var theSet = setx.split('-')
+            if(theSet[0].trim() > theSet[1].trim()){
+                wonSets++;
+            }else if(theSet[1].trim() > theSet[0].trim()){
+                lostSets++;
+            }
+        })
+        callback(wonSets, lostSets)
+    },
+
+    won: function(result){
+      var wonSets = 0
+      var lostSets = 0
+      this.setsFromResults(result, function(wons, losts){
+        wonSets = wons
+        lostSets = losts
+      });
+      return wonSets > lostSets
+    },
+
+    lost: function(result){
+        var wonSets = 0
+        var lostSets = 0
+        this.setsFromResults(result, function(wons, losts){
+            wonSets = wons
+            lostSets = losts
+        });
+        return wonSets < lostSets
+    }
+
 });
 
 App.User = DS.Model.extend({
